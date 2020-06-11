@@ -171,7 +171,7 @@ namespace SystemTrayCursor
                 // Initialize Tray Icon
                 trayIcon = new NotifyIcon()
                 {
-                    Icon = new System.Drawing.Icon(@"C:\Users\Kirstein\Pictures\cursors\cursoricon.ico"),
+                    Icon = new System.Drawing.Icon(Environment.CurrentDirectory + "\\lib\\cursoricon.ico"),
                     ContextMenu = new ContextMenu(new MenuItem[] {
                 new MenuItem("Change Color", change),
                 new MenuItem("Stop", toggle),
