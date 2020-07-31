@@ -1,4 +1,4 @@
-# CursedCursor
+# DynamicCursor
 
 Preview:
 
