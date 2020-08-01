@@ -1,4 +1,5 @@
 # DynamicCursor
+Cursor icon that follows your mouse direction
 
 Preview:
 
