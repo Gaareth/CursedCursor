@@ -13,15 +13,30 @@ Preview:
 * => Start the exe
 
 
+## WARNING
+The dynamic cursor works by modifying the registry entry of the default cursor.
+By using the exit button in the SystemTray the registry entries will be reverted to: <br>
+                
+```
+{"Arrow", "C:\\Windows\\Cursors\\aero_arrow.cur"},
+{"Hand",  "C:\\Windows\\Cursors\\aero_link.cur"}
+```
+
+If these are not your default cursors. The cursors may be a bit different.
+
+***
+
 ### Generating
 If you want to generate the cursor files yourself you need to:
 * Install [python](https://www.python.org/downloads/)
 * Install the required packages: `pip install -r requirements.txt` <br> Note: `opencv-python` and `numpy` are optional
 * Clone [Iconolatry](https://github.com/SystemRage/Iconolatry) for the .cur conversion
 #### Usage
-`> python cursor_gen.py -i BASE_IMAGE -o OUTPUT_DIR`
+`> python cursor_gen.py -i BASE_IMAGE -o OUTPUT_DIR` <br>
+Note: the OUTPUT_DIR should be named `rotated` (If the base cursor is black: `rotated_black`)
+***
 
 Also a SystemTray is included, with options to:
-* Change the color of the cursor
+* Change the color of the cursor (A second folder called `rotated_black` is required)
 * Stop the animated cursor
 * Exit the programm
