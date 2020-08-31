@@ -7,9 +7,11 @@ Preview:
 ![preview](https://s7.gifyu.com/images/cursor.gif)
 
 ## Installation
-* [Download](https://github.com/Gaareth/DynamicCursor/releases) the exe
+* [Download](https://github.com/Gaareth/DynamicCursor/releases) the exe (or compiled it yourself) 
 * Clone this repository
 * Copy the exe into the cloned repo
+* => Start the exe
+
 
 ### Generating
 If you want to generate the cursor files yourself you need to:
