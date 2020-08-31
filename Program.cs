@@ -22,6 +22,22 @@ namespace SystemTrayCursor
         [DllImport("user32.dll")]
         static extern bool GetCursorPos(out POINT lpPoint);
 
+
+        [DllImport("user32.dll", EntryPoint = "GetCursorInfo")]
+        public static extern bool GetCursorInfo(out CURSORINFO pci);
+
+        [DllImport("user32.dll", EntryPoint = "CopyIcon")]
+        public static extern IntPtr CopyIcon(IntPtr hIcon);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CURSORINFO
+        {
+            public Int32 cbSize;        // Specifies the size, in bytes, of the structure. 
+            public Int32 flags;         // Specifies the cursor state. This parameter can be one of the following values:
+            public IntPtr hCursor;          // Handle to the cursor. 
+            public POINT ptScreenPos;       // A POINT structure that receives the screen coordinates of the cursor. 
+        }
+
         public struct POINT
         {
             public int X;
@@ -42,8 +58,8 @@ namespace SystemTrayCursor
                 Application.Run(new MyCustomApplicationContext());
 
             }
-            catch {
-
+            catch(Exception e) {
+                Console.WriteLine("Expetions: {0}", e);
             }
             finally {
                 Console.WriteLine("Shut down Programm");
@@ -127,27 +143,75 @@ namespace SystemTrayCursor
 
         private static void resetCursor()
         {
-            ChangeCursor("C:\\Windows\\Cursors\\aero_arrow.cur");
+            var defaultCursors = new Dictionary<string, string>(){
+                {"Arrow", "C:\\Windows\\Cursors\\aero_arrow.cur"},
+                {"Hand",  "C:\\Windows\\Cursors\\aero_link.cur"},
+                {"I-Beam", "C:\\Windows\\Cursors\\beam_r.cur"}
+
+            };
+
+            foreach (var cur in defaultCursors) {
+                Console.WriteLine("> Reset " + cur.Key + " to " + cur.Value);
+                ChangeCursorRegistry(cur.Key, cur.Value);
+            }
         }
 
         private static void setCursorAngle(string angle)
         {
-            Console.WriteLine(Environment.CurrentDirectory);
-            ChangeCursor(Environment.CurrentDirectory + "\\lib\\cursors\\rotated_1_wb_cur\\default_cursor_" + angle + ".cur");
+            ChangeCursor(angle, false);
         }
 
         private static void setCursorAngleBlack(string angle)
         {
-            ChangeCursor(Environment.CurrentDirectory+"\\lib\\cursors\\rotated_cur\\default_cursor_" + angle + ".cur");
+            ChangeCursor(angle, true);
         }
 
 
- 
+       
 
-        private static void ChangeCursor(string curFile)
+        private static IntPtr getCursorType() {
+            IntPtr hwndic = new IntPtr();
+            CURSORINFO curin = new CURSORINFO();
+            curin.cbSize = Marshal.SizeOf(curin);
+            if (GetCursorInfo(out curin))
+            {
+                return curin.hCursor;
+            }
+            return IntPtr.Zero;
+        }
+
+
+        private static void ChangeCursorRegistry(string cursorName, string curFile)
         {
-            Microsoft.Win32.Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Cursors\", "Arrow", curFile);
+            Microsoft.Win32.Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Cursors\", cursorName, curFile);
             SystemParametersInfo(SPI_SETCURSORS, 0, 0, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
+        }
+
+        private static void ChangeCursor(string angle, Boolean black)
+        {
+            IntPtr cursorType = getCursorType();
+
+            var cursors = new Dictionary<Int32, string>(){
+                {65539, "Arrow"},
+                {65567, "Hand"},
+                {65541, "I-Beam"}
+            
+            };
+
+            //Console.WriteLine(cursorType);
+
+
+            string cursorName;
+            if(cursors.TryGetValue(cursorType.ToInt32(), out cursorName))
+            {   
+                Console.WriteLine(cursorName);
+
+                string mode = black ? "_black" : "";
+                string curFile = Environment.CurrentDirectory + "\\cursors\\" + cursorName + "\\rotated_cur"+ mode + "\\default_cursor_" + angle + ".cur";
+                ChangeCursorRegistry(cursorName, curFile);
+            }
+            
+            
         }
 
         const int SPI_SETCURSORS = 0x0057;
@@ -171,7 +235,7 @@ namespace SystemTrayCursor
                 // Initialize Tray Icon
                 trayIcon = new NotifyIcon()
                 {
-                    Icon = new System.Drawing.Icon(Environment.CurrentDirectory + "\\lib\\cursoricon.ico"),
+                    Icon = new System.Drawing.Icon(Environment.CurrentDirectory + "\\cursors\\cursoricon.ico"),
                     ContextMenu = new ContextMenu(new MenuItem[] {
                 new MenuItem("Change Color", change),
                 new MenuItem("Stop", toggle),
@@ -202,6 +266,7 @@ namespace SystemTrayCursor
             static void change(object sender, EventArgs e)
             {
                 blackCursor = blackCursor ? false : true;
+                // blackCursor = !blackCursor
             }
         }
 
