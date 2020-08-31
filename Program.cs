@@ -207,7 +207,7 @@ namespace SystemTrayCursor
                 Console.WriteLine(cursorName);
 
                 string mode = black ? "_black" : "";
-                string curFile = Environment.CurrentDirectory + "\\cursors\\" + cursorName + "\\rotated_cur"+ mode + "\\default_cursor_" + angle + ".cur";
+                string curFile = Environment.CurrentDirectory + "\\cursors\\" + cursorName + "\\rotated"+ mode + "_cur\\default_cursor_" + angle + ".cur";
                 ChangeCursorRegistry(cursorName, curFile);
             }
             
