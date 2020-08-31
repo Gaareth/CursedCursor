@@ -22,8 +22,7 @@ By using the exit button in the SystemTray the registry entries will be reverted
 {"Hand",  "C:\\Windows\\Cursors\\aero_link.cur"}
 ```
 
-If these are not your default cursors. The cursors may be a bit different.
-
+If these are not your default cursors the cursors may be a bit different. By changing the Windows cursor size (System > Cursor size) everything should be back to normal.
 ***
 
 ### Generating
